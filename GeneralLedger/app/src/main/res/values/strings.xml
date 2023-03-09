@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">General Ledger</string>
+    <string name="action_add">Add</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="title_general_ledger">General Ledger</string>
+    <string name="title_add_transaction">Add Transaction</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="summary">Summary</string>
+    <string name="summary_details">Summary details</string>
+    <string name="currency_format">%1$.2f %2$s</string>
+</resources>
