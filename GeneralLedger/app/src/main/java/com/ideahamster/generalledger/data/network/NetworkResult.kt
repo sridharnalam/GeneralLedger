@@ -1,4 +1,4 @@
-package com.ideahamster.generalledger.network
+package com.ideahamster.generalledger.data.network
 
 sealed class NetworkResult<T> {
     data class Loading<T>(val isLoading: Boolean) : NetworkResult<T>()

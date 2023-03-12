@@ -18,7 +18,7 @@ import com.ideahamster.generalledger.data.util.DateUtil
 import com.ideahamster.generalledger.databinding.FragmentAddTransactionBinding
 import com.ideahamster.generalledger.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Calendar
+import java.util.*
 
 /**
  * Screen to add a new transaction to the list
@@ -53,14 +53,14 @@ class AddTransactionFragment : Fragment() {
             binding.switchCredit.text =
                 getString(if (isChecked) R.string.credit_label else R.string.debit_label)
         }
-        val calender = Calendar.getInstance();
+        val calender = Calendar.getInstance()
 
         val timePickerDialogListener =
-            TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+            TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
                 binding.etTime.setText(getString(R.string.time_format, hourOfDay, minute, 0))
             }
         binding.etTime.setOnClickListener {
-            val timePicker: TimePickerDialog = TimePickerDialog(
+            val timePicker = TimePickerDialog(
                 requireContext(),
                 timePickerDialogListener,
                 calender.get(Calendar.HOUR_OF_DAY),
@@ -71,11 +71,11 @@ class AddTransactionFragment : Fragment() {
         }
 
         val datePickerDialogListener =
-            DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                 binding.etDate.setText(getString(R.string.date_format, year, month + 1, dayOfMonth))
             }
         binding.etDate.setOnClickListener {
-            val datePicker: DatePickerDialog = DatePickerDialog(
+            val datePicker = DatePickerDialog(
                 requireContext(),
                 datePickerDialogListener,
                 calender.get(Calendar.YEAR),

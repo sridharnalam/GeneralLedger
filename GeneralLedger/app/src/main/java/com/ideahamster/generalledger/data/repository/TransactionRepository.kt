@@ -2,8 +2,8 @@ package com.ideahamster.generalledger.data.repository
 
 import com.ideahamster.generalledger.data.entity.Transaction
 import com.ideahamster.generalledger.data.local.TransactionDao
-import com.ideahamster.generalledger.network.LedgerApiService
-import com.ideahamster.generalledger.network.NetworkResult
+import com.ideahamster.generalledger.data.network.LedgerApiService
+import com.ideahamster.generalledger.data.network.NetworkResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -20,11 +20,11 @@ class TransactionRepository @Inject constructor(private val ledgerApiService: Le
     }
 
     suspend fun insertTransaction(transaction: Transaction): Long {
-        return transactionDao.insertTransaction(transaction);
+        return transactionDao.insertTransaction(transaction)
     }
 
     suspend fun insertTransactionList(transactionList: List<Transaction>): List<Long> {
-        return transactionDao.insertTransactionList(transactionList);
+        return transactionDao.insertTransactionList(transactionList)
     }
 
     fun getTransactionList(): Flow<List<Transaction>> {

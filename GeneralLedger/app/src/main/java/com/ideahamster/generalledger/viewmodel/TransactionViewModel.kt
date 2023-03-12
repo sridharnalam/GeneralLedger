@@ -11,7 +11,7 @@ import com.ideahamster.generalledger.LedgerApplication
 import com.ideahamster.generalledger.R
 import com.ideahamster.generalledger.data.entity.Transaction
 import com.ideahamster.generalledger.data.repository.TransactionRepository
-import com.ideahamster.generalledger.network.NetworkResult
+import com.ideahamster.generalledger.data.network.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

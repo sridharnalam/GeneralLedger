@@ -18,7 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
 import com.ideahamster.generalledger.R
 import com.ideahamster.generalledger.databinding.FragmentTransactionListBinding
-import com.ideahamster.generalledger.network.NetworkResult
+import com.ideahamster.generalledger.data.network.NetworkResult
 import com.ideahamster.generalledger.ui.adapter.BalanceAdapter
 import com.ideahamster.generalledger.ui.adapter.TransactionAdapter
 import com.ideahamster.generalledger.viewmodel.TransactionViewModel
@@ -64,7 +64,7 @@ class TransactionListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupMenu()
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet.bottomSheetLayout);
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet.bottomSheetLayout)
         binding.rvTransactions.adapter = transactionAdapter
         binding.bottomSheet.rvCurrencyBalance.adapter = balanceAdapter
         binding.bottomSheet.bottomSheetHeader.setOnClickListener {
@@ -177,7 +177,7 @@ class TransactionListFragment : Fragment() {
                     intent.setDataAndType(uri, "text/csv")
                     intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                     if (intent.resolveActivity(requireContext().packageManager) != null) {
-                        startActivity(intent);
+                        startActivity(intent)
                     } else {
                         Snackbar.make(
                             binding.root,

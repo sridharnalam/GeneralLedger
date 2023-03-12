@@ -1,4 +1,4 @@
-package com.ideahamster.generalledger.network
+package com.ideahamster.generalledger.data.network
 
 import dagger.Module
 import dagger.Provides
