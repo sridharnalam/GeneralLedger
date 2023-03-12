@@ -6,10 +6,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.ideahamster.generalledger.R
-import com.ideahamster.generalledger.data.Transaction
+import com.ideahamster.generalledger.data.entity.Transaction
 import com.ideahamster.generalledger.databinding.ItemTransactionBinding
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.inject.Inject
 
 class TransactionAdapter @Inject constructor() :
@@ -39,22 +37,15 @@ class TransactionAdapter @Inject constructor() :
             transaction.currency
         )
         val amountTextColorId =
-            if (transaction.isCredit) android.R.color.holo_green_dark else android.R.color.holo_red_light
+            if (transaction.isCredit == true) android.R.color.holo_green_dark else android.R.color.holo_red_light
         holder.view.tvAmount.setTextColor(
             ContextCompat.getColor(
                 holder.view.root.context,
                 amountTextColorId
             )
         )
-        val dateText = getFormattedDate(transaction)
+        val dateText = transaction.formattedCreatedAt
         holder.view.tvDate.text = dateText
-    }
-
-    private fun getFormattedDate(transaction: Transaction): String {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.ENGLISH)
-        val date: Date? = dateFormat.parse(transaction.createdAt)
-        val displayFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
-        return if (date != null) displayFormat.format(date) else "N/A"
     }
 
     override fun getItemCount(): Int {

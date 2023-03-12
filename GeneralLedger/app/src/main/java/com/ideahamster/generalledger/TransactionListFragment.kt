@@ -7,14 +7,19 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.ideahamster.generalledger.databinding.FragmentTransactionListBinding
 import com.ideahamster.generalledger.network.NetworkResult
+import com.ideahamster.generalledger.ui.adapter.BalanceAdapter
 import com.ideahamster.generalledger.ui.adapter.TransactionAdapter
 import com.ideahamster.generalledger.ui.adapter.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -25,12 +30,17 @@ class TransactionListFragment : Fragment() {
     companion object {
         const val TAG = "TransactionListFragment"
     }
+
     private var _binding: FragmentTransactionListBinding? = null
     private val binding get() = _binding!!
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var viewModel: TransactionViewModel
+
     @Inject
     lateinit var transactionAdapter: TransactionAdapter
+
+    @Inject
+    lateinit var balanceAdapter: BalanceAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +60,7 @@ class TransactionListFragment : Fragment() {
         setupMenu()
         bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet.bottomSheetLayout);
         binding.rvTransactions.adapter = transactionAdapter
+        binding.bottomSheet.rvCurrencyBalance.adapter = balanceAdapter
         binding.bottomSheet.bottomSheetHeader.setOnClickListener {
             bottomSheetBehavior.state =
                 if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED)
@@ -58,31 +69,70 @@ class TransactionListFragment : Fragment() {
                     BottomSheetBehavior.STATE_COLLAPSED
         }
 
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {}
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 binding.bottomSheet.bottomSheetArrow.rotation = slideOffset * 180
             }
         })
-        viewModel.transactionResponse.observe(viewLifecycleOwner) {
-            when (it) {
-                is NetworkResult.Loading -> {
-                    binding.progressbar.isVisible = it.isLoading
-                }
 
-                is NetworkResult.Failure -> {
-                    // Toast.makeText(this, it.errorMessage, Toast.LENGTH_SHORT).show()
-                    Log.e(TAG, it.errorMessage)
-                    binding.progressbar.isVisible = false
-                }
+        binding.buttonRefresh.setOnClickListener {
+            binding.progressbar.isVisible = true
+            binding.containerRefresh.visibility = View.GONE
+            viewModel.pullRemoteTransactionList()
+        }
 
-                is NetworkResult.Success -> {
-                    transactionAdapter.updateTransactionList(it.data)
-                    binding.progressbar.isVisible = false
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.getTransactionList()
+                viewModel.transactionsFlow.collect { transactionList ->
+                    if (transactionList.isNotEmpty()) {
+                        transactionAdapter.updateTransactionList(transactionList)
+                        binding.containerRefresh.visibility = View.GONE
+                        binding.progressbar.isVisible = false
+                    }
                 }
-                else -> {}
             }
         }
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.balanceFlow.collect { balanceList ->
+                    if(balanceList.isNotEmpty()) {
+                        balanceAdapter.updateBalanceList(balanceList)
+                    }
+                }
+            }
+        }
+
+
+
+        if (!viewModel.areTransactionsPulled()) {
+            viewModel.pullRemoteTransactionList()
+            viewModel.networkResponse.observe(viewLifecycleOwner) {
+                when (it) {
+                    is NetworkResult.Loading -> {
+                        binding.progressbar.isVisible = it.isLoading
+                    }
+
+                    is NetworkResult.Failure -> {
+                        Log.e(TAG, it.errorMessage)
+                        binding.progressbar.isVisible = false
+                        binding.containerRefresh.visibility = View.VISIBLE
+                        binding.tvErrorMessage.text =
+                            getString(R.string.error_message_format, it.errorMessage)
+                    }
+
+                    is NetworkResult.Success -> {
+                        binding.progressbar.isVisible = false
+                        binding.containerRefresh.visibility = View.GONE
+                        viewModel.markTransactionsPulled()
+                    }
+                    else -> {}
+                }
+            }
+        }
+
     }
 
     private fun setupMenu() {
@@ -95,7 +145,7 @@ class TransactionListFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.action_add -> {
-                        findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+                        findNavController().navigate(R.id.action_TransactionListFragment_to_AddTransactionFragment)
                         return true
                     }
                     else -> false

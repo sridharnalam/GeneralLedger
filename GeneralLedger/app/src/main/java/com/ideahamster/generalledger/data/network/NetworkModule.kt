@@ -15,9 +15,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
+    private const val BASE_URL = "https://take-home-test-api.herokuapp.com"
+
     @Singleton
     @Provides
-    fun provideOkHttp(@Named("loggingInterceptor") httpLoggingInterceptor: HttpLoggingInterceptor) : OkHttpClient {
+    fun provideOkHttp(@Named("loggingInterceptor") httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .build()
@@ -35,7 +37,7 @@ object NetworkModule {
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://take-home-test-api.herokuapp.com")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()

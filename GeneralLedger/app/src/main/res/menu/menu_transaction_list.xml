@@ -7,6 +7,13 @@
         android:id="@+id/action_add"
         android:orderInCategory="100"
         android:title="@string/action_add"
-        android:icon="@android:drawable/ic_menu_add"
+        app:iconTint="@color/white"
+        android:icon="@android:drawable/ic_input_add"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_export"
+        android:orderInCategory="100"
+        android:title="@string/action_export"
+        app:showAsAction="never" />
 </menu>
