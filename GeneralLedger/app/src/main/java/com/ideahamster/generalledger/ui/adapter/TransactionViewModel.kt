@@ -14,10 +14,7 @@ import com.ideahamster.generalledger.data.repository.TransactionRepository
 import com.ideahamster.generalledger.network.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -112,6 +109,24 @@ class TransactionViewModel @Inject constructor(
                     else -> {}
                 }
                 _networkResponse.postValue(it)
+            }
+        }
+    }
+
+    fun exportCSV(transactionList: MutableList<Transaction>): Flow<String> {
+        return flow {
+            val filename = getApplication<LedgerApplication>().getString(R.string.exported_csv_file)
+            getApplication<LedgerApplication>().openFileOutput(filename, Context.MODE_PRIVATE).use {
+
+                it.write("""id, created_at, description, is_credit, currency, amount""".toByteArray())
+                it.write("\n".toByteArray())
+
+                transactionList.forEach { transaction: Transaction ->
+                    it.write("${transaction.id}, ${transaction.createdAt}, ${transaction.description}, ${transaction.isCredit}, ${transaction.currency}, ${transaction.amount}".toByteArray())
+                    it.write("\n".toByteArray())
+                }
+                it.flush()
+                emit(filename)
             }
         }
     }

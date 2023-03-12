@@ -29,6 +29,7 @@
     <string name="concat_date_time">%s %s</string>
     <string name="date_format">%d-%02d-%02d</string>
     <string name="time_format">%02d:%02d:%02d</string>
+    <string name="exported_csv_file">ledger_transactions.csv</string>
 
     <string-array name="currency_array">
         <item>USD</item>

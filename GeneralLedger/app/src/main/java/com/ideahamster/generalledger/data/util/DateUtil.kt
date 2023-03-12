@@ -9,8 +9,8 @@ import java.util.*
 class DateUtil {
     companion object {
         private const val TAG = "DateUtil"
-        private val sourceDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ", Locale.getDefault())
-        private val displayDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        private val sourceDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.ENGLISH)
+        private val displayDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
         fun changeDateFormat(strDate: String?): String {
             val default = "N/A"

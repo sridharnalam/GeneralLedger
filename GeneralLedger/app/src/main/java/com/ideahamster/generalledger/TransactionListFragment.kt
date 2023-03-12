@@ -1,8 +1,11 @@
 package com.ideahamster.generalledger
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.core.content.FileProvider
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
@@ -13,13 +16,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.ideahamster.generalledger.databinding.FragmentTransactionListBinding
 import com.ideahamster.generalledger.network.NetworkResult
 import com.ideahamster.generalledger.ui.adapter.BalanceAdapter
 import com.ideahamster.generalledger.ui.adapter.TransactionAdapter
 import com.ideahamster.generalledger.ui.adapter.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 /**
@@ -95,17 +101,16 @@ class TransactionListFragment : Fragment() {
                 }
             }
         }
+
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.balanceFlow.collect { balanceList ->
-                    if(balanceList.isNotEmpty()) {
+                    if (balanceList.isNotEmpty()) {
                         balanceAdapter.updateBalanceList(balanceList)
                     }
                 }
             }
         }
-
-
 
         if (!viewModel.areTransactionsPulled()) {
             viewModel.pullRemoteTransactionList()
@@ -148,10 +153,40 @@ class TransactionListFragment : Fragment() {
                         findNavController().navigate(R.id.action_TransactionListFragment_to_AddTransactionFragment)
                         return true
                     }
+                    R.id.action_export -> {
+                        exportToCsvFile()
+                        return true
+                    }
                     else -> false
                 }
             }
         }, viewLifecycleOwner)
+    }
+
+    private fun exportToCsvFile() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.exportCSV(transactionAdapter.differ.currentList)
+                .collect {
+                    val file = File(requireContext().filesDir, it)
+                    val uri = FileProvider.getUriForFile(
+                        requireContext(),
+                        requireContext().applicationContext.packageName + ".provider",
+                        file
+                    )
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.setDataAndType(uri, "text/csv")
+                    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    if (intent.resolveActivity(requireContext().packageManager) != null) {
+                        startActivity(intent);
+                    } else {
+                        Snackbar.make(
+                            binding.root,
+                            "CSV file exported to ${file.absolutePath}",
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+                }
+        }
     }
 
     override fun onDestroyView() {
