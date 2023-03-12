@@ -1,14 +1,13 @@
-package com.ideahamster.generalledger
+package com.ideahamster.generalledger.ui
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.ideahamster.generalledger.R
 import com.ideahamster.generalledger.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -11,32 +11,31 @@ class DateUtil {
         private const val TAG = "DateUtil"
         private val sourceDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z", Locale.ENGLISH)
         private val displayDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
+        private const val default_place_holder = "N/A"
 
         fun changeDateFormat(strDate: String?): String {
-            val default = "N/A"
             if (TextUtils.isEmpty(strDate)) {
-                return default
+                return default_place_holder
             }
             return try {
                 val date = sourceDateFormat.parse(strDate!!)
-                if (date != null) displayDateFormat.format(date) else default
+                if (date != null) displayDateFormat.format(date) else default_place_holder
             } catch (ex: ParseException) {
                 ex.message?.let { Log.e(TAG, it) }
-                default
+                default_place_holder
             }
         }
 
         fun toSourceDateString(displayDateString: String): String {
-            val default = "N/A"
             if (TextUtils.isEmpty(displayDateString)) {
-                return default
+                return default_place_holder
             }
             return try {
                 val date = displayDateFormat.parse(displayDateString)
-                if (date != null) sourceDateFormat.format(date) else default
+                if (date != null) sourceDateFormat.format(date) else default_place_holder
             } catch (ex: ParseException) {
                 ex.message?.let { Log.e(TAG, it) }
-                default
+                default_place_holder
             }
         }
     }

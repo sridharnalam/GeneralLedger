@@ -1,7 +1,6 @@
-package com.ideahamster.generalledger
+package com.ideahamster.generalledger.ui
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -17,11 +16,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.snackbar.Snackbar
+import com.ideahamster.generalledger.R
 import com.ideahamster.generalledger.databinding.FragmentTransactionListBinding
 import com.ideahamster.generalledger.network.NetworkResult
 import com.ideahamster.generalledger.ui.adapter.BalanceAdapter
 import com.ideahamster.generalledger.ui.adapter.TransactionAdapter
-import com.ideahamster.generalledger.ui.adapter.TransactionViewModel
+import com.ideahamster.generalledger.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.ideahamster.generalledger
+package com.ideahamster.generalledger.ui
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -12,10 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.ideahamster.generalledger.R
 import com.ideahamster.generalledger.data.entity.Transaction
 import com.ideahamster.generalledger.data.util.DateUtil
 import com.ideahamster.generalledger.databinding.FragmentAddTransactionBinding
-import com.ideahamster.generalledger.ui.adapter.TransactionViewModel
+import com.ideahamster.generalledger.viewmodel.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 

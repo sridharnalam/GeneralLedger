@@ -1,4 +1,4 @@
-package com.ideahamster.generalledger.ui.adapter
+package com.ideahamster.generalledger.viewmodel
 
 import android.app.Application
 import android.content.Context

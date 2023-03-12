@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/TransactionListFragment"
-        android:name="com.ideahamster.generalledger.TransactionListFragment"
+        android:name="com.ideahamster.generalledger.ui.TransactionListFragment"
         android:label="@string/title_general_ledger"
         tools:layout="@layout/fragment_transaction_list">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/AddTransactionFragment"
-        android:name="com.ideahamster.generalledger.AddTransactionFragment"
+        android:name="com.ideahamster.generalledger.ui.AddTransactionFragment"
         android:label="@string/title_add_transaction"
         tools:layout="@layout/fragment_add_transaction">
 
